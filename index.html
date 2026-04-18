@@ -4,96 +4,110 @@
     <title>GenSet Pro Live Monitor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        /* જૂની CSS અહિયાં બેઠી કોપી કરેલી છે */
         body{font-family:Sans-Serif; text-align:center; background:#121212; color:white; margin:0; padding:10px;}
         .flex{display:flex; flex-wrap:wrap; justify-content:center; gap:10px;}
-        .card{background:#1e1e1e; padding:15px; border-radius:12px; width:300px; border-top:8px solid #444;}
+        .card{background:#1e1e1e; padding:15px; border-radius:12px; width:140px; border-top:5px solid #444; margin: 5px;}
         .r{border-color:#ff3333;} .y{border-color:#ffcc00;} .b{border-color:#3366ff;}
-        .val{font-size:22px; font-weight:bold;}
+        .val{font-size:18px; font-weight:bold; margin-top: 5px;}
         .box{background:#222; margin:15px auto; padding:15px; border-radius:10px; max-width:500px; border:1px solid #444;}
+        
+        /* Start/Stop Buttons */
+        .ctrl-box { display: flex; justify-content: space-around; padding: 20px; background: #1e1e1e; border-radius: 20px; margin: 15px auto; max-width: 500px; }
+        .btn-start { padding:20px; background: linear-gradient(145deg, #2ecc71, #27ae60); color:white; border:none; border-radius:50%; width:100px; height:100px; font-weight:bold; cursor:pointer; box-shadow: 0 5px #145a32; }
+        .btn-stop { padding:20px; background: linear-gradient(145deg, #e74c3c, #c0392b); color:white; border:none; border-radius:50%; width:100px; height:100px; font-weight:bold; cursor:pointer; box-shadow: 0 5px #7b241c; }
+        .btn-start:active, .btn-stop:active { transform: translateY(4px); box-shadow: none; }
+
         .btn{padding:12px; background:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; width:90%; font-weight:bold; margin-top:10px;}
         .hidden { display: none !important; }
-        .login-card { background: #1a1a1a; padding: 40px; border-radius: 20px; max-width: 400px; margin: 100px auto; border: 2px solid #444; box-shadow: 0 0 20px rgba(0,255,204,0.2); }
-        input { padding: 15px; margin: 10px 0; width: 90%; background: #333; color: white; border: 1px solid #555; border-radius: 10px; font-size: 16px; }
-        .st-item { font-weight: bold; font-size: 19px; padding: 10px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; color: white; }
+        .login-card { background: #1a1a1a; padding: 40px; border-radius: 20px; max-width: 400px; margin: 80px auto; border: 2px solid #444; box-shadow: 0 0 20px rgba(0,255,204,0.2); }
+        input { padding: 15px; margin: 10px 0; width: 85%; background: #333; color: white; border: 1px solid #555; border-radius: 10px; font-size: 16px; }
+        .st-item { font-weight: bold; font-size: 16px; padding: 8px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; color: white; }
+        #devTitle { font-size: 18px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-<!-- ૧. લોગિન વિભાગ -->
+<!-- ૧. લોગિન સેક્શન -->
 <div id="loginSection" class="login-card">
-    <h2 style="color:#00ffcc">🔒 SYSTEM ACCESS</h2>
-    <p>Enter Device ID & Password to Start</p>
+    <h2 style="color:#00ffcc">🔒 GENSET LOGIN</h2>
+    <p>Enter Device ID & Password</p>
     <input type="text" id="inputID" placeholder="Unique ID (e.g. 871C20...)">
     <input type="password" id="inputPass" placeholder="Secret Password">
     <button class="btn" onclick="login()">LOGIN TO DASHBOARD</button>
-    <p style="color: #666; font-size: 12px; margin-top: 20px;">New device? Try default: 123456</p>
+    <p style="color: #666; font-size: 11px; margin-top: 20px;">Default Password is: 123456</p>
 </div>
 
-<!-- ૨. મેઈન ડેશબોર્ડ -->
+<!-- ૨. મેઈન ડેશબોર્ડ સેક્શન -->
 <div id="dashboardSection" class="hidden">
-    <div class="box" style="border: none; background: linear-gradient(145deg, #1a1a1a, #222);">
-        <h2 id="devTitle" style="color:#00ffcc">DEVICE: --</h2>
+    <div class="box" style="border: none; background: #1a1a1a; margin-bottom: 5px;">
+        <h2 id="devTitle" style="color:#00ffcc">ID: --</h2>
+    </div>
+
+    <!-- START/STOP CONTROL -->
+    <div class="ctrl-box">
+        <button class="btn-start" onclick="controlGen('on')">START<br>ENGINE</button>
+        <button class="btn-stop" onclick="controlGen('off')">STOP<br>ENGINE</button>
     </div>
 
     <div class="flex">
-        <div class="card r"><h3>PHASE R</h3><div class="val" id="vr">0V</div><div class="val" id="ir">0A</div></div>
-        <div class="card y"><h3>PHASE Y</h3><div class="val" id="vy">0V</div><div class="val" id="iy">0A</div></div>
-        <div class="card b"><h3>PHASE B</h3><div class="val" id="vb">0V</div><div class="val" id="ib">0A</div></div>
+        <div class="card r"><h3>PHASE R</h3><div class="val" id="vr">0V</div><div class="val" id="ir">0.0A</div></div>
+        <div class="card y"><h3>PHASE Y</h3><div class="val" id="vy">0V</div><div class="val" id="iy">0.0A</div></div>
+        <div class="card b"><h3>PHASE B</h3><div class="val" id="vb">0V</div><div class="val" id="ib">0.0A</div></div>
     </div>
 
     <div class="box">
-        <h3 style="color:#00ff00">ENGINE STATUS</h3>
-        <div class="st-item">BATT LEVEL: <span id="stBatt">--</span></div>
+        <h3 style="color:#ffcc00">ENGINE HEALTH</h3>
+        <div class="st-item">GEN STATUS: <span id="stIsOn" style="font-weight:bold;">--</span></div>
+        <div class="st-item">BATTERY: <span id="stBatt">--</span></div>
         <div class="st-item">OIL PRESSURE: <span id="stOil">--</span></div>
         <div class="st-item">DIESEL TANK: <span id="stDsl">--</span></div>
         <div class="st-item">TEMPERATURE: <span id="stTemp">--</span></div>
-        <div class="st-item">GEN ON/OFF: <span id="stIsOn">--</span></div>
     </div>
 
-    <div style="margin: 20px;">
-        <button class="btn" style="background:#e74c3c; width: 150px;" onclick="location.reload()">LOGOUT</button>
-    </div>
+    <button class="btn" style="background:#444; width: 120px; margin-bottom: 30px;" onclick="location.reload()">LOGOUT</button>
 </div>
 
-<!-- Firebase Script -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
 
 <script>
-    // તમારી Firebase વિગતો
+    // તમારી સાચી Firebase વિગતો
     const firebaseConfig = {
-        apiKey: "XNEjyhB6iMejcjTLJqWJHsp2FdnaQxECz4gmP7OV", // આ તમારો સિક્રેટ છે
-    databaseURL: "https://genrator-4f0c3-default-rtdb.firebaseio.com"
+        apiKey: "XNEjyhB6iMejcjTLJqWJHsp2FdnaQxECz4gmP7OV", 
+        databaseURL: "https://genrator-4f0c3-default-rtdb.firebaseio.com"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let currentID = "";
+
     function login() {
-        const id = document.getElementById('inputID').value.toUpperCase();
-        const pass = document.getElementById('inputPass').value;
+        const id = document.getElementById('inputID').value.toUpperCase().trim();
+        const pass = document.getElementById('inputPass').value.trim();
 
-        if(!id || !pass) { alert("Please fill ID and Password"); return; }
+        if(!id || !pass) { alert("ID and Password Required!"); return; }
 
+        // Firebase માં પાસવર્ડ ચેક કરવો
         db.ref("Devices/" + id + "/config/password").once("value").then((snapshot) => {
-            if (snapshot.exists() && snapshot.val() === pass) {
+            if (snapshot.exists() && snapshot.val().toString() === pass) {
+                currentID = id;
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('dashboardSection').classList.remove('hidden');
-                document.getElementById('devTitle').innerText = "ID: " + id;
+                document.getElementById('devTitle').innerText = "DEVICE ID: " + id;
                 startLive(id);
             } else {
-                alert("Incorrect Credentials!");
+                alert("Wrong ID or Password!");
             }
-        });
+        }).catch(e => alert("Error: " + e));
     }
 
     function startLive(deviceID) {
-        // આ ફંક્શન હવે ઓટોમેટિક ડેટા અપડેટ કરશે
+        // લાઈવ ડેટા અપડેટ
         db.ref("Devices/" + deviceID + "/live").on("value", (snapshot) => {
             const d = snapshot.val();
             if(!d) return;
 
-            // ડેટા અપડેટ (તમારું જૂનું document.getElementById લોજિક)
             document.getElementById('vr').innerText = (d.vr || 0) + 'V';
             document.getElementById('ir').innerText = (d.ir || 0) + 'A';
             document.getElementById('vy').innerText = (d.vy || 0) + 'V';
@@ -105,9 +119,20 @@
             document.getElementById('stOil').innerText = d.os || "OK";
             document.getElementById('stDsl').innerText = (d.dp || 0) + '%';
             document.getElementById('stTemp').innerText = (d.td || 0) + '°C';
-            document.getElementById('stIsOn').innerText = d.isOn == 1 ? "RUNNING" : "STOPPED";
-            document.getElementById('stIsOn').style.color = d.isOn == 1 ? "#00ff00" : "#ff3333";
+            
+            const statusBox = document.getElementById('stIsOn');
+            statusBox.innerText = d.isOn == 1 ? "RUNNING" : "STOPPED";
+            statusBox.style.color = d.isOn == 1 ? "#00ff00" : "#ff3333";
         });
+    }
+
+    // એન્જિન કંટ્રોલ ફંક્શન
+    function controlGen(action) {
+        if(!currentID) return;
+        if(confirm("Are you sure to " + action.toUpperCase() + " the engine?")) {
+            db.ref("Devices/" + currentID + "/control").update({ action: action });
+            alert("Command Sent: " + action.toUpperCase());
+        }
     }
 </script>
 </body>
